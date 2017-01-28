@@ -1,12 +1,13 @@
 const jsdom		= require('jsdom')
 const fs			= require('fs')
+const mailer	= require('nodemailer')
 
 const configFile	= './config.json'
 const storeFile	= './store.json'
 
 //load configuration
 if (!fs.existsSync(configFile)) {
-	console.warn('Please provide a configuration in config.json')
+	console.warn('Please provide a configuration in config.json. See config.example.json for a template.')
 	process.exit()
 }
 const config	= JSON.parse(fs.readFileSync(configFile, 'utf8'))
@@ -23,7 +24,7 @@ let update		= []
 let delta			= []
 let requests	= []
 
-for (let page of config) {
+for (let page of config.pages) {
 	let storedPage = store.find((aStoredPage) => page.url === aStoredPage.url && page.selector === aStoredPage.selector)
 	requests.push(new Promise((resolve, reject) => {
 		jsdom.env(
@@ -43,7 +44,6 @@ for (let page of config) {
 				}
 				if (page.finds.length) {
 					delta.push(page)
-					console.log(page)
 				}
 				resolve()
 			}
@@ -53,4 +53,16 @@ for (let page of config) {
 
 Promise.all(requests).then(() => {
 	fs.writeFileSync(storeFile, JSON.stringify(update), {encoding: 'utf8'})
+
+	if (!delta.length) {
+		console.log('No new changes found')
+	} else {
+		console.log(delta)
+
+		if (config.mail !== undefined) {
+			const mailer = require('./mailer.js')
+			mailer(config, delta)
+		}
+	}
 })
+.catch(console.error)

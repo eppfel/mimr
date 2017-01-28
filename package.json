@@ -13,6 +13,7 @@
     "url": "https://github.com/eppfel/mimir.git"
   },
   "dependencies": {
-    "jsdom": "^9.9.1"
+    "jsdom": "^9.9.1",
+    "nodemailer": "^2.7.2"
   }
 }

@@ -1,0 +1,14 @@
+{
+	"mail": {
+		"host": "smtp.example.org",
+		"username": "mail@example.org",
+		"password": "***",
+		"from": "mail@example.org",
+		"to": "mail@example.org"
+	},
+	"pages": [{
+		"name": "Github Trending Repositories",
+		"url": "https://github.com/trending",
+		"selector": ".explore-content h3 a"
+	}]
+}
