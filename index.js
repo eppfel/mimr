@@ -1,18 +1,11 @@
-const jsdom		= require('jsdom')
-const fs			= require('fs')
-const mailer	= require('nodemailer')
-
-const configFile	= './config.json'
-const storeFile	= './store.json'
+const jsdom = require('jsdom')
+const fs = require('fs')
 
 //load configuration
-if (!fs.existsSync(configFile)) {
-	console.warn('Please provide a configuration in config.json. See config.example.json for a template.')
-	process.exit()
-}
-const config	= JSON.parse(fs.readFileSync(configFile, 'utf8'))
+const config = require('./config')
 
 // load previous results
+const storeFile = './store.json'
 let store
 if (fs.existsSync(storeFile)) {
 	store = JSON.parse(fs.readFileSync(storeFile, 'utf8'))
@@ -20,9 +13,9 @@ if (fs.existsSync(storeFile)) {
 	store = []
 }
 
-let update		= []
-let delta			= []
-let requests	= []
+let update = []
+let delta = []
+let requests = []
 
 for (let page of config.pages) {
 	let storedPage = store.find((aStoredPage) => page.url === aStoredPage.url && page.selector === aStoredPage.selector)
@@ -60,7 +53,7 @@ Promise.all(requests).then(() => {
 		console.log(delta)
 
 		if (config.mail !== undefined) {
-			const mailer = require('./mailer.js')
+			const mailer = require('./mailer')
 			mailer(config, delta)
 		}
 	}
