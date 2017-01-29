@@ -27,12 +27,16 @@ for (let page of config.pages) {
 					console.warn(err)
 					return resolve()
 				}
+
+				// record current state with selector
 				page.finds = []
 				for (element of window.document.querySelectorAll(page.selector)) {
 					page.finds.push(element.innerHTML)
 				}
 				update.push(Object.assign({},page))
-				if (storedPage !== undefined && storedPage.finds !== undefined) {
+
+				// check for new results
+				if (storedPage !== undefined && storedPage.finds !== undefined && storedPage.finds.length && page.finds.length) {
 					page.finds = page.finds.filter(extract => storedPage.finds.indexOf(extract) === -1)
 				}
 				if (page.finds.length) {
