@@ -1,4 +1,4 @@
-const mailer	= require('nodemailer')
+const mailer = require('nodemailer')
 
 module.exports = function sendResultsPerMail (config, findings) {
 	var transporter = mailer.createTransport({
@@ -13,17 +13,17 @@ module.exports = function sendResultsPerMail (config, findings) {
 	let message = 'I found something:\n'
 	let list = ''
 	for (let page of findings) {
-		let jobs = page.finds.join('</li><li>')
-		list += `<li><a href="${page.url}">${page.name}</a><ul><li>${jobs}</li></ul></li>`
+		let finds = page.finds.join('</li>\n<li>')
+		list += `<section>\n<h2><a href="${page.url}">${page.name}</a></h2>\n<ul>\n<li>${finds}</li>\n</ul>\n</section>`
 		message += `${page.name}: ${page.url} \n`
-		message += page.finds.join() + '\n'
+		message += page.finds.join(',\n') + '\n\n'
 	}
-	let body = `<h1>I found something:</h1><ul>${list}</ul>`
+	let body = `<h1>Mímir found some changes:</h1>\n${list}`
 	if (transporter) {
 		transporter.sendMail({
 			from: config.mail.from,
 			to: config.mail.to,
-			subject: 'New findings from your webpage change tracker',
+			subject: `Mímir found changes on ${findings.length} pages`,
 			text: message,
 			html: body
 		}, (err) => {
