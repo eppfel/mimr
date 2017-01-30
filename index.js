@@ -1,5 +1,6 @@
 const jsdom = require('jsdom')
 const fs = require('fs')
+const url = require('url')
 
 //load configuration
 const config = require('./config')
@@ -30,14 +31,27 @@ for (let page of config.pages) {
 
 				// record current state with selector
 				page.finds = []
-				for (element of window.document.querySelectorAll(page.selector)) {
-					page.finds.push(element.innerHTML)
+				for (let element of window.document.querySelectorAll(page.selector)) {
+					if (element.hasAttribute('href')) {
+						let anchor = {name: element.innerHTML, url: url.resolve(page.url, element.getAttribute('href'))}
+						page.finds.push(anchor)
+					} else {
+						page.finds.push(element.innerHTML)
+					}
 				}
 				update.push(Object.assign({},page))
 
 				// check for new results
 				if (storedPage !== undefined && storedPage.finds !== undefined && storedPage.finds.length && page.finds.length) {
-					page.finds = page.finds.filter(extract => storedPage.finds.indexOf(extract) === -1)
+					page.finds = page.finds.filter(extract => {
+						if (typeof extract === 'string') {
+							return (storedPage.finds.indexOf(extract) === -1)
+						} else if (extract.url !== undefined) {
+							return (storedPage.finds.find(storedExtract => extract.url === storedExtract.url) === undefined)
+						} else {
+							return true
+						}
+					})
 				}
 				if (page.finds.length) {
 					delta.push(page)
