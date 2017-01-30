@@ -1,12 +1,12 @@
 const mailer = require('nodemailer')
 
-module.exports = function sendResultsPerMail (config, findings) {
+module.exports = function sendResultsPerMail (mail, findings, callback) {
 	var transporter = mailer.createTransport({
-		host: config.mail.host,
+		host: mail.host,
 		secure: true,
 		auth: {
-			user: config.mail.username,
-			pass: config.mail.password
+			user: mail.username,
+			pass: mail.password
 		}
 	})
 
@@ -25,23 +25,18 @@ module.exports = function sendResultsPerMail (config, findings) {
 				}
 				return `${finds}<a href="${finding.url}">${finding.name}</a>`
 			}, finds)
-			message = page.finds.reduce((msg, finding) => `${msg} - ${finding.name}: ${finding.url}\n`}, message)
+			message = page.finds.reduce((msg, finding) => `${msg} - ${finding.name}: ${finding.url}\n`, message)
 		}
 		list += `<section>\n<h2><a href="${page.url}">${page.name}</a></h2>\n<ul>\n<li>${finds}</li>\n</ul>\n</section>`
 	}
 	let body = `<h1>Mímir found these changes:</h1>\n<br>\n${list}`
 	if (transporter) {
 		transporter.sendMail({
-			from: config.mail.from,
-			to: config.mail.to,
+			from: mail.from,
+			to: mail.to,
 			subject: `Mímir found changes on ${findings.length} pages`,
 			text: message,
 			html: body
-		}, (err) => {
-			if (err) {
-				throw err
-			}
-			console.log('Mail with results sent!')
-		})
+		}, callback)
 	}
 }
