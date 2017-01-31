@@ -17,6 +17,8 @@
     "nodemailer": "^2.7.2"
   },
   "devDependencies": {
-    "eslint": "^3.14.1"
+    "chai": "^3.5.0",
+    "eslint": "^3.14.1",
+    "mocha": "^3.2.0"
   }
 }
