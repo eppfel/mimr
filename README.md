@@ -3,7 +3,7 @@ Mímr (_[from the norse god Mímir](https://en.wikipedia.org/wiki/M%C3%ADmir)_) 
 
 ## Installation
 
-This script requires `node`, `npm` and [`yarn`(secure npm alternative)](https://yarnpkg.com/). You have to clone this repository, because the package is not yet available in the npm registry.
+This script requires `node`>= 6, `npm` and [`yarn`(secure npm alternative)](https://yarnpkg.com/). You have to clone this repository, because the package is not yet available in the npm registry.
 
 ```bash
 $ git clone https://github.com/eppfel/mimr.git
