@@ -1,11 +1,12 @@
 const fs = require('fs')
+const path = require('path')
 const extract = require('./extract')
 
 //load configuration
 const config = require('./config')
 
 // load previous results
-const storeFile = './store.json'
+const storeFile = path.join(__dirname,  'store.json')
 let store
 if (fs.existsSync(storeFile)) {
 	store = JSON.parse(fs.readFileSync(storeFile, 'utf8'))
