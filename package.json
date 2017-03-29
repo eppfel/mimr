@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "NodeJS script to track and mail changes of specific elements on a web-site using CSS selectors",
   "main": "extract.js",
+  "bin": {"mimr": "./cli.js"},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
